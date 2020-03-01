@@ -10,13 +10,13 @@ class Database:
     # password = '@123456'
     host = 'divar.cagmscbv5lcr.us-east-2.rds.amazonaws.com'
     user = 'admin'
-    password = 'o915517979O'
+    password = 'Vardast_dv'
     db = 'Divar'
-    # connector.connect(host='127.0.0.1', port='3307', user='root', password='@123456', database='Divar')
+
+
     def __init__(self):
         #google
         self.connection = connector.connect(host=self.host,port='3306',user=self.user, password=self.password, database=self.db,charset='utf8',autocommit=True)
-        # self.connection = connector.connect('127.0.0.1:3307', 'administrator', '@123456', 'Divar',charset='utf8', init_command='SET NAMES UTF8')
         self.cursor = self.connection.cursor()
 
 
@@ -37,14 +37,7 @@ class Database:
             count=self.cursor.rowcount
             return count
         except:
-            # self.cursor.close()
-            # self.connection.rollback()
             raise
-            # print('sleep for deadlock...'+mesg)
-            # time.sleep(random.randint(60,120))
-            # db = Database()
-            # print('insert again')
-            # db.insert_batch(query, values)
         finally:
             if (self.connection.is_connected()):
                 self.connection.close()
@@ -63,8 +56,6 @@ class Database:
             self.connection.close()
         return output
 
-    # def __del__(self):
-    #     self.connection.close()
 def add_items(values=[]):
     db = Database()
     query = "INSERT IGNORE INTO `divar_items`(`url`, `type`, `city_id`, `date`, `phone`) VALUES (%s, %s, %s, %s, %s) ON DUPLICATE KEY UPDATE phone=phone"
