@@ -2,7 +2,7 @@ Flask
 Jinja2
 Markupsafe 
 Werkzeug
-guicorn
+gunicorn
 itsdangerous
 wsgiref
 
