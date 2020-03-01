@@ -1,8 +1,6 @@
 import time
 
-import MySQLdb
 import mysql.connector as connector
-import random
 
 class Database:
 
