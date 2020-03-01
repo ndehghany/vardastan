@@ -4,8 +4,8 @@ Markupsafe
 Werkzeug
 gunicorn
 itsdangerous
-mysql==5.7
-mysql-connector-c==6.1
-mysql-connector-python==8.0
-mysqlclient==1.3.13
+mysql
+mysql-connector-c
+mysql-connector-python
+mysqlclient
 
