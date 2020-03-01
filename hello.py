@@ -9,3 +9,6 @@ def show_regions_list():
     return str(result[0])
     # return ' '.join(['شهید عراقی' ,'امیرآباد', 'گیشا'])
 
+
+
+
