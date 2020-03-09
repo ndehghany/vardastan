@@ -1,1 +1,1 @@
-web: gunicorn restful_apis:vardastan_app
+web: gunicorn restful_apis:app
