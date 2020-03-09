@@ -10,7 +10,7 @@ def get_regions_list():
 
 @app.route('/region_ads')
 def get_region_ads(region):
-    return
+    return "OK"
 
 
 
