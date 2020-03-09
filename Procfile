@@ -1,1 +1,1 @@
-web: gunicorn get_regions_list:app
+web: gunicorn restful_apis:app
