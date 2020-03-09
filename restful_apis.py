@@ -1,23 +1,46 @@
-import os
-from flask import Flask
-
+from flask import Flask, request, jsonify
 app = Flask(__name__)
 
-@app.route('/region_list',methods=['POST'])
-def get_regions_list():
-    return ['\"تهران، اندیشه\",\"تهران، اندیشه\",\"تهران، آهنگ\",\"-1\",\"تهران، پیروزی\",\"تهران، جیحون\",\"تهران، شهریار\",\"تهران، شوش\",\"تهران، منیریه\",\"-1\",\"تهران، نارمک\",\"تهران، مجیدیه\",\"تهران، مهرآباد جنوبی\",\"تهران، تهران‌سر\",\"تهران، قصر\",\"تهران، جوادیه\",\"تهران، شهر ری\",\"تهران، پونک\",\"تهران، کوی فردوس\",\"تهران، اکباتان\",\"تهران، جیحون\",\"تهران، جنت‌آباد جنوبی\",\"تهران، تهرانپارس شرقی\",\"تهران، شمس‌آباد\",\"تهران، پردیس\",\"-1\",\"تهران، شهرک تختی\",\"-1\",\"-1\",\"تهران، خزانه\",\"تهران، شهران جنوبی\",\"تهران، استاد معین\",\"-1\",\"تهران، جیحون\",\"تهران، سلیمانیه\",\"تهران، کوی فردوس\",\"تهران، چیتگر\",\"تهران، شهریار\",\"تهران، رباط کریم\",\"تهرا']
+@app.route('/getmsg/', methods=['GET'])
+def respond():
+    # Retrieve the name from url parameter
+    name = request.args.get("name", None)
 
+    # For debugging
+    print(f"got name {name}")
 
-@app.route('/region_ads')
-def get_region_ads(region):
-    return "OK"
+    response = {}
 
+    # Check if user sent a name at all
+    if not name:
+        response["ERROR"] = "no name found, please send a name."
+    # Check if the user entered a number not a name
+    elif str(name).isdigit():
+        response["ERROR"] = "name can't be numeric."
+    # Now the user entered a valid name
+    else:
+        response["MESSAGE"] = f"Welcome {name} to our awesome platform!!"
+
+    # Return the response in json format
+    return jsonify(response)
+
+@app.route('/post/', methods=['POST'])
+def post_something():
+    param = request.form.get('name')
+    print(param)
+    # You can add the test cases you made in the previous function, but in our case here you are just testing the POST functionality
+    if param:
+        return jsonify({
+            "Message": f"Welcome {name} to our awesome platform!!",
+            # Add this option to distinct the POST request
+            "METHOD" : "POST"
+        })
+    else:
+        return jsonify({
+            "ERROR": "no name found, please send a name."
+        })
+
+# A welcome message to test our server
 @app.route('/')
 def index():
     return "<h1>Welcome to our server !!</h1>"
-
-
-
-
-
-
