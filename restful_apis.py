@@ -12,6 +12,10 @@ def get_regions_list():
 def get_region_ads(region):
     return "OK"
 
+@app.route('/')
+def index():
+    return "<h1>Welcome to our server !!</h1>"
+
 
 
 
