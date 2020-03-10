@@ -10,7 +10,7 @@ class Database:
     # password = '@123456'
     host = 'divar.cagmscbv5lcr.us-east-2.rds.amazonaws.com'
     user = 'admin'
-    password = 'Vardast_dv'
+    password = 'Vardast_db'
     db = 'Divar'
 
 
@@ -56,92 +56,47 @@ class Database:
             self.connection.close()
         return output
 
-def add_items(values=[]):
+def get_items_buy(query):
     db = Database()
-    query = "INSERT IGNORE INTO `divar_items`(`url`, `type`, `city_id`, `date`, `phone`) VALUES (%s, %s, %s, %s, %s) ON DUPLICATE KEY UPDATE phone=phone"
-    return db.insert_batch(query,values)
+    query = """select
 
-def add_phonenNmbers(phones=[]):
+        JSON_ARRAYAGG(
+            JSON_OBJECT(
+				'published_date', published_date
+                ,'rooms', rooms
+                ,'vadie', vadie
+                ,'elevator', elevator
+                ,'size', size
+                ,'parking', parking
+                ,'description', description
+                ,'phone', phone
+                ,'create_year', create_year
+                ,'url',url
+                )
+           )
+
+ from home_tehran_buy where """+query
+    return db.query(query)
+
+def get_items_rent(query):
     db = Database()
-    query = "UPDATE divar_results SET `phone`=%s,`status` =-1 WHERE `id` = %s"
-    return db.insert_batch(query, phones)
+    query = """select
 
-def add_items_dict(items=[]):
-    db = Database()
-    query = "INSERT INTO `Divar`.`divar_results` (`title`,`image`,`description`,`has_chat`,`red_text`,`normal_text`,`token`,`city`,`district`,`category`,`adv_type`,`crawl_time`,`url`,`published_date`) VALUES (%s,%s, %s, %s, %s,%s, %s, %s, %s, %s, %s, %s, %s, %s) ON DUPLICATE KEY UPDATE url=url"
-    return db.insert_batch(query,items)
+            JSON_ARRAYAGG(
+                JSON_OBJECT(
+    				'published_date', published_date
+                    ,'rooms', rooms
+                    ,'vadie', vadie
+                    ,'elevator', elevator
+                    ,'size', size
+                    ,'parking', parking
+                    ,'description', description
+                    ,'phone', phone
+                    ,'create_year', create_year
+                    ,'url',url
+                    )
+               )
 
-def get_items(worker_id):
-    db = Database()
-    items=db.call_func('get_items_3({});'.format(worker_id))
-    return items
+     from home_tehran_rent where """ + query
 
-def get_items_without_phones(worker_id):
-    db = Database()
-    items=db.call_func('get_items_phones({});'.format(worker_id))
-    return items
-
-def get_items_dict(worker_id):
-    db = Database()
-    items=db.call_func('get_items({});'.format(worker_id))
-    return items
-
-def get_items_deleted_time(offset):
-    db = Database()
-    items=db.call_func('get_items_deleted_time({});'.format(offset))
-    return items
-
-def update_items(values):
-    db = Database()
-    query="UPDATE divar_items SET `new` =1 WHERE `id` = %s"
-    return db.insert_batch(query,values)
-
-def update_items_dict(values):
-    db = Database()
-    query="UPDATE divar_results SET `status` =1 WHERE `id` = %s"
-    return db.insert_batch(query,values)
-def update_last_access_time(values):
-    db = Database()
-    query="UPDATE divar_results SET `last_access_time` =Now() WHERE `id` = %s"
-    return db.insert_batch(query,values)
-
-
-def ignore_items(values):
-    db = Database()
-    query="UPDATE divar_items SET `new` =0 WHERE `id` = %s"
-    return db.insert_batch(query,values,'ignoreeeee')
-
-def insert_full_items_dict(city,type,values):
-    db = Database()
-    pre_query='INSERT IGNORE INTO home_'+city+'_'+type
-    query = pre_query + " (`items_id`, `published_date`, `rooms`, `crawl_time`, `vadie`, `elevator`, `size`, `parking`, `description`, `rent`, `images`, `location`, `adv_type`, `floor`, `phone`, `adv_source`, `create_year`, `daste_bandi`, `url`,`orginal_published_date`) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s,%s,%s,%s,%s) ON DUPLICATE KEY UPDATE `url`=`url`"
-    total =db.insert_batch(query, values)
-
-    db = Database()
-    query = "UPDATE divar_results SET `status` =0 WHERE `id` = %s"
-    total_id=[]
-    for item in values:
-        total_id.append((item[0],))
-    db.insert_batch(query, total_id, 'ignor22222')
-    return total
-def update_items_deleted(values):
-
-    db = Database()
-    query = "UPDATE divar_results SET `deleted_time`=%s WHERE `id` = %s"
-    total=db.insert_batch(query, values, 'ignor22222')
-    return total
-
-
-def insert_full_items(city,type,values):
-    db = Database()
-    pre_query='INSERT IGNORE INTO home_'+city+'_'+type
-    query = pre_query + " (`items_id`, `published_date`, `rooms`, `crawl_time`, `vadie`, `elevator`, `size`, `parking`, `description`, `rent`, `images`, `location`, `adv_type`, `floor`, `phone`, `adv_source`, `create_year`, `daste_bandi`, `url`,`orginal_published_date`) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s,%s,%s,%s,%s) ON DUPLICATE KEY UPDATE `url`=`url`"
-    total =db.insert_batch(query, values)
-
-    db = Database()
-    query = "UPDATE divar_items SET `new` =0 WHERE `id` = %s"
-    total_id=[]
-    for item in values:
-        total_id.append((item[0],))
-    db.insert_batch(query, total_id, 'ignor22222')
-    return total
+    return db.query(query)
