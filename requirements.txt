@@ -7,4 +7,5 @@ itsdangerous
 mysql
 mysql-connector-python
 mysqlclient
+persiantools
 

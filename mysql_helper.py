@@ -11,13 +11,13 @@ class Database:
     host = 'divar.cagmscbv5lcr.us-east-2.rds.amazonaws.com'
     user = 'admin'
     password = 'Vardast_db'
-    db = 'Divar'
+    db = 'Today'
 
 
-    def __init__(self):
+    def __init__(self,dictionary=False):
         #google
         self.connection = connector.connect(host=self.host,port='3306',user=self.user, password=self.password, database=self.db,charset='utf8',autocommit=True)
-        self.cursor = self.connection.cursor()
+        self.cursor = self.connection.cursor(dictionary=dictionary)
 
 
     def insert(self, query):
@@ -30,7 +30,7 @@ class Database:
             self.connection.rollback()
             raise
 
-    def insert_batch(self,query,values,mesg=''):
+    def insert_batch(self,query,values):
         try:
             self.cursor.executemany(query, values)
             self.connection.commit()
@@ -48,55 +48,40 @@ class Database:
         output=self.cursor.fetchall()
         return output
 
-    def call_func(self,funct):
+    def call_func(self,funct,args=tuple()):
+        try:
+            self.cursor.callproc(funct,args)
+            for result in self.cursor.stored_results():
+                return result.fetchall()
+        except:
+            raise
+        finally:
+            if (self.connection.is_connected()):
+                self.connection.close()
 
-        self.cursor.execute('call '+funct)
-        output=self.cursor.fetchall()
-        if (self.connection.is_connected()):
-            self.connection.close()
-        return output
+    def call_func_simple(self,funct):
+        try:
+            self.cursor.execute('call {}'.format(funct))
+            return self.cursor.fetchall()
+        except:
+            raise
+        finally:
+            if (self.connection.is_connected()):
+                self.connection.close()
 
-def get_items_buy(query):
+def get_items(query_id,last_timestamp):
+    db = Database(dictionary=True)
+    return db.call_func_simple('get_items ({},{})'.format(query_id,last_timestamp))
+
+
+def add_query(input_query,sql_query):
     db = Database()
-    query = """select
+    return db.call_func('add_query',(input_query,sql_query))[0]
 
-        JSON_ARRAYAGG(
-            JSON_OBJECT(
-				'published_date', published_date
-                ,'rooms', rooms
-                ,'vadie', vadie
-                ,'elevator', elevator
-                ,'size', size
-                ,'parking', parking
-                ,'description', description
-                ,'phone', phone
-                ,'create_year', create_year
-                ,'url',url
-                )
-           )
+def get_queries():
+    db = Database(dictionary=True)
+    return db.call_func_simple('get_queries()')
 
- from home_tehran_buy where """+query
-    return db.query(query)
-
-def get_items_rent(query):
+def del_query(query_id):
     db = Database()
-    query = """select
-
-            JSON_ARRAYAGG(
-                JSON_OBJECT(
-    				'published_date', published_date
-                    ,'rooms', rooms
-                    ,'vadie', vadie
-                    ,'elevator', elevator
-                    ,'size', size
-                    ,'parking', parking
-                    ,'description', description
-                    ,'phone', phone
-                    ,'create_year', create_year
-                    ,'url',url
-                    )
-               )
-
-     from home_tehran_rent where """ + query
-
-    return db.query(query)
+    return db.call_func('del_query',(query_id,))[0]
