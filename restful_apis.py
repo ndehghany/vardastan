@@ -131,5 +131,5 @@ def get_items(query_id,last_timestamp):
         output = {'items': [], 'last_timestamp': 0}
     return jsonify(output)
 
-if __name__ == "__main__":
-    app.run(port=2021)
+# if __name__ == "__main__":
+#     app.run(port=2021)
