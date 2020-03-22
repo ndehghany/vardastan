@@ -131,10 +131,9 @@ def get_items(query_id,last_timestamp):
         output = {'items': [], 'last_timestamp': 0}
     return jsonify(output)
 
-@app.route('/', methods=['GET'])
+@app.route('/')
 def index():
-    return jsonify('Hi')
-
+    return "<h1>Welcome to our server !!</h1>"
 
 
 if __name__ == "__main__":
