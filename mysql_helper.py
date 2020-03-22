@@ -4,10 +4,6 @@ import mysql.connector as connector
 
 class Database:
 
-    #google
-    # host = '127.0.0.1'
-    # user = 'administrator'
-    # password = '@123456'
     host = 'divar.cagmscbv5lcr.us-east-2.rds.amazonaws.com'
     user = 'admin'
     password = 'Vardast_db'
@@ -18,30 +14,6 @@ class Database:
         #google
         self.connection = connector.connect(host=self.host,port='3306',user=self.user, password=self.password, database=self.db,charset='utf8',autocommit=True)
         self.cursor = self.connection.cursor(dictionary=dictionary)
-
-
-    def insert(self, query):
-        try:
-            self.cursor.execute(query)
-            self.connection.commit()
-            count=self.cursor.rowcount
-            return count
-        except:
-            self.connection.rollback()
-            raise
-
-    def insert_batch(self,query,values):
-        try:
-            self.cursor.executemany(query, values)
-            self.connection.commit()
-            count=self.cursor.rowcount
-            return count
-        except:
-            raise
-        finally:
-            if (self.connection.is_connected()):
-                self.connection.close()
-
 
     def query(self, query):
         self.cursor.execute(query)
