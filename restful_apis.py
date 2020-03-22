@@ -1,8 +1,7 @@
 from flask import Flask, request, jsonify
 import mysql_helper
-from persiantools import  digits
+from persiantools import digits
 from datetime import datetime
-import pytz
 
 from flask import json
 app = Flask(__name__)

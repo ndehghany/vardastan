@@ -4,8 +4,6 @@ Markupsafe
 Werkzeug
 gunicorn
 itsdangerous
-mysql
-mysql-connector-python
 mysqlclient
 persiantools
 
